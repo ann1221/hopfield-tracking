@@ -7,10 +7,6 @@ dependencies:
   - numpy
   - scipy
   - scikit-learn
-  - networkx
-
-# black box meta-parameter optimization
-  - smac
 
 # parallelism
   - tqdm
@@ -22,7 +18,7 @@ dependencies:
   - jupyterlab
   - nb-clean  # for git commit filter for jupyter
 
-  # plotting
+# plotting
   - seaborn
   - holoviews
   - bokeh
