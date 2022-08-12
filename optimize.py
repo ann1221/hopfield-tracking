@@ -6,7 +6,7 @@ from typing import Dict, Tuple
 import ConfigSpace as CS
 import pandas as pd
 from ConfigSpace import Configuration
-from smac.facade.smac_bb_facade import SMAC4BB
+from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
 
 from datasets import get_hits
@@ -72,7 +72,7 @@ def run(args):
         scenario.input_psmac_dirs = args.output_directory
     scenario.shared_model = args.batch
 
-    optimizer = SMAC4BB(scenario=scenario, tae_runner=worker.compute)
+    optimizer = SMAC4HPO(scenario=scenario, tae_runner=worker.compute)
     best_config = optimizer.optimize()
     return best_config, optimizer.get_runhistory(), optimizer.get_trajectory()
 

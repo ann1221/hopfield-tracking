@@ -11,6 +11,9 @@ dependencies:
 
 # black box meta-parameter optimization
   - smac
+  - gxx_linux-64
+  - gcc_linux-64
+  - swig
 
 # parallelism
   - tqdm
