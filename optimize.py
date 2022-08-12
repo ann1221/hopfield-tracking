@@ -25,7 +25,7 @@ class MyWorker:
 
     def compute(self, config: Configuration, instance, seed: int) -> Tuple[float, Dict]:
         event_metrics = []
-        config = config.get_dictionary()
+        config = config.get_dictionary().copy()
         threshold = config.pop('threshold')
         for eid, event in self.hits.groupby('event_id'):
             event.reset_index(drop=True, inplace=True)
