@@ -98,12 +98,17 @@ def main():
     perfect_act = gen_perfect_act(seg, tseg)
     act = acts[-1]
     metrics = metric_history(event, seg, tseg, acts, positives)
-    metrics.plot()
+    sns.relplot(data=metrics.reset_index().melt('index'), row='variable', x='index', y='value', kind="line",
+                facet_kws={'sharey': False, 'sharex': True})
     plt.show()
     df = pd.DataFrame(trajectory).drop(columns='incumbent')
-    for c in df:
-        df[[c]].plot()
-        plt.show()
+    sns.relplot(data=df.reset_index().melt('index'), row='variable', x='index', y='value', kind="line",
+        facet_kws = {'sharey': False, 'sharex': True})
+    plt.show()
+    df = pd.DataFrame([rec for rec in pd.DataFrame(trajectory).incumbent])
+    sns.relplot(data=df.reset_index().melt('index'), row='variable', x='index', y='value', kind="line",
+        facet_kws = {'sharey': False, 'sharex': True})
+    plt.show()
     plot_result(event, seg, act, perfect_act, positives[-1]).show()
     app.run()
 
