@@ -6,11 +6,16 @@ from typing import Dict, Tuple
 import ConfigSpace as CS
 import pandas as pd
 from ConfigSpace import Configuration
+from matplotlib import pyplot as plt
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
+from vispy import app
 
 from datasets import get_hits
 from hopfield import iterate
+from hopfield.iterate import metric_history
+from hopfield.plot import plot_result
+from metrics.segments import gen_perfect_act
 from metrics.tracks import track_metrics
 from segment.track import gen_seg_track_layered
 
@@ -92,12 +97,21 @@ def main():
         raise ArgumentError(args.shared_directory,
                             'Shared output directory is required when running in a batch system')
     best_config, history, trajectory = Optimizer(args.dataset, args.max_budget).run(args)
-    print(pd.DataFrame([best_config]).T)
-    print(pd.DataFrame(trajectory).drop(columns='incumbent').T)
-    for (config_id, instance_id, seed, budget), (
-            cost, time, status, starttime, endtime, additional_info) in history.data.items():
-        print(config_id, instance_id, seed, budget)
-        print(cost, time, status, starttime, endtime, additional_info)
+    print(best_config.get_dictionary())
+    event = get_hits(args.dataset, 1)
+    seg, acts, positives = iterate.run(event, **best_config)
+    tseg = gen_seg_track_layered(event)
+    perfect_act = gen_perfect_act(seg, tseg)
+    act = acts[-1]
+    metrics = metric_history(event, seg, tseg, acts, positives)
+    metrics.plot()
+    plt.show()
+    df = pd.DataFrame(trajectory).drop(columns='incumbent')
+    for c in df:
+        df[[c]].plot()
+        plt.show()
+    plot_result(event, seg, act, perfect_act, positives[-1]).show()
+    app.run()
 
 
 if __name__ == '__main__':
