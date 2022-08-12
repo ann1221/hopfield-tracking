@@ -5,6 +5,7 @@ from typing import Dict
 
 import ConfigSpace as CS
 import pandas as pd
+import seaborn as sns
 from ConfigSpace import Configuration
 from matplotlib import pyplot as plt
 from smac.facade.smac_mf_facade import SMAC4MF
@@ -61,7 +62,7 @@ class Optimizer:
             'runcount-limit': args.runcount_limit,
             'cs': self.get_configspace(),
             'instances': [[str(eid)] for eid in self.hits.event_id.unique()],
-            'multi_objectives': ['trackml_loss', 'total_steps']
+            'multi_objectives': ['trackml_loss', 'total_steps', 'n_fp_seg']
         })
 
         if args.output_directory:
